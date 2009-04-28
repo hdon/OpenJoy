@@ -2,3 +2,12 @@ OpenJoy will provide a FOSS- and commercial-friendly API and tracker
 for providing a more console-esque control configuration experience,
 automatic controller discovery and configuration, and player/gamepad
 identification facilities.
+
+NEWS
+
+Stuff to try if you're interested:
+
+make testdiagrams && ./testdiagrams data/ps2-diagram-back.png data/ps2-diagram-front.png data/ps2-diagram.rects
+
+Check out an alternate view with ps2-diagram-front2.png
+
