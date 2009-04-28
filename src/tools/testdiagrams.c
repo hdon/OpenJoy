@@ -120,18 +120,17 @@ int main(int argc, char **argv) {
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_ONE, GL_ONE);
 
-                //glBindTexture(GL_TEXTURE_2D, tex[1]);
-                glDisable(GL_TEXTURE_2D);
+                glBindTexture(GL_TEXTURE_2D, tex[1]);
                 glColor3d(1, throb, throb);
 
                 glBegin(GL_QUADS);
-                //glTexCoord2d(x1/, 1);
+                glTexCoord2d(x1/, 1);
                 glVertex2i(mx1, my2);
-                //glTexCoord2d(1, 1);
+                glTexCoord2d(1, 1);
                 glVertex2i(mx2, my2);
-                //glTexCoord2d(1, 0);
+                glTexCoord2d(1, 0);
                 glVertex2i(mx2, my1);
-                //glTexCoord2d(0, 0);
+                glTexCoord2d(0, 0);
                 glVertex2i(mx1, my1);
                 glEnd();
 
