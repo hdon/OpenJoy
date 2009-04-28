@@ -1,0 +1,4 @@
+OpenJoy will provide a FOSS- and commercial-friendly API and tracker
+for providing a more console-esque control configuration experience,
+automatic controller discovery and configuration, and player/gamepad
+identification facilities.
