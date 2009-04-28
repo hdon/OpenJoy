@@ -116,6 +116,10 @@ int main(int argc, char **argv) {
                 int my1 = y1  + mouseover->y;
                 int mx2 = mx1 + mouseover->w;
                 int my2 = my1 + mouseover->h;
+                double tx1 = mouseover->x / 256.0;
+                double ty1 = mouseover->y / 256.0;
+                double tx2 = (mouseover->x + mouseover->w) / 256.0;
+                double ty2 = (mouseover->y + mouseover->h) / 256.0;
 
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_ONE, GL_ONE);
@@ -124,14 +128,14 @@ int main(int argc, char **argv) {
                 glColor3d(1, throb, throb);
 
                 glBegin(GL_QUADS);
-                glTexCoord2d(x1/, 1);
-                glVertex2i(mx1, my2);
-                glTexCoord2d(1, 1);
-                glVertex2i(mx2, my2);
-                glTexCoord2d(1, 0);
-                glVertex2i(mx2, my1);
-                glTexCoord2d(0, 0);
-                glVertex2i(mx1, my1);
+                glTexCoord2d(tx1, ty2);
+                glVertex2i  (mx1, my2);
+                glTexCoord2d(tx2, ty2);
+                glVertex2i  (mx2, my2);
+                glTexCoord2d(tx2, ty1);
+                glVertex2i  (mx2, my1);
+                glTexCoord2d(tx1, ty1);
+                glVertex2i  (mx1, my1);
                 glEnd();
 
                 glDisable(GL_BLEND);
@@ -147,6 +151,7 @@ int main(int argc, char **argv) {
             glError("main", &err);
 
         } while (0);
+        SDL_Delay(10);
     }
 
     byebye:
