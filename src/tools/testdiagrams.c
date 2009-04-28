@@ -9,7 +9,6 @@ int main(int argc, char **argv) {
     struct OJ_DiagramElement *diag, *mouseover = NULL;
     GLuint tex[2];
     int i;
-    int back = 0, front = 0;
 
     /* Diagram screen coords */
     int x1 = (640 - 256) / 2;
@@ -39,22 +38,11 @@ int main(int argc, char **argv) {
                     case 'q':
                     case SDLK_ESCAPE:
                         goto byebye;
-                    case '1':
-                        back = 1;
-                        break;
-                    case '2':
-                        front = 1;
-                        break;
                 }
                 break;
             case SDL_KEYUP:
                 switch (event.key.keysym.sym) {
-                    case '1':
-                        back = 0;
-                        break;
-                    case '2':
-                        front = 0;
-                        break;
+                    default: break;
                 }
                 break;
             case SDL_MOUSEMOTION:
@@ -70,6 +58,8 @@ int main(int argc, char **argv) {
         }
         do {
             static unsigned int err = 0;
+            double throb1 = sin(SDL_GetTicks() * 0.007) / 4.0 + 0.75;
+            double throb2 = throb1 * 0.5;
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glDisable(GL_DEPTH_TEST);
@@ -81,44 +71,40 @@ int main(int argc, char **argv) {
             glLoadIdentity();
             glEnable(GL_TEXTURE_2D);
 
-            if (back) {
-                glBindTexture(GL_TEXTURE_2D, tex[0]);
-                glColor3ub(255, 255, 255);
+            /* Draw back */
+            glBindTexture(GL_TEXTURE_2D, tex[0]);
+            glColor3ub(255, 255, 255);
 
-                glBegin(GL_QUADS);
-                glTexCoord2i(0, 1);
-                glVertex2i(x1, y2);
-                glTexCoord2i(1, 1);
-                glVertex2i(x2, y2);
-                glTexCoord2i(1, 0);
-                glVertex2i(x2, y1);
-                glTexCoord2i(0, 0);
-                glVertex2i(x1, y1);
-                glEnd();
-            }
-            if (front) {
-                double throb = sin(SDL_GetTicks() * 0.007) / 4.0 + 0.75;
-                glEnable(GL_BLEND);
-                glBlendFunc(GL_ONE, GL_ONE);
+            glBegin(GL_QUADS);
+            glTexCoord2i(0, 1);
+            glVertex2i(x1, y2);
+            glTexCoord2i(1, 1);
+            glVertex2i(x2, y2);
+            glTexCoord2i(1, 0);
+            glVertex2i(x2, y1);
+            glTexCoord2i(0, 0);
+            glVertex2i(x1, y1);
+            glEnd();
 
-                glBindTexture(GL_TEXTURE_2D, tex[1]);
-                glColor3d(throb, throb, throb);
+            /* Draw front! */
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_ONE, GL_ONE);
 
-                glBegin(GL_QUADS);
-                glTexCoord2i(0, 1);
-                glVertex2i(x1, y2);
-                glTexCoord2i(1, 1);
-                glVertex2i(x2, y2);
-                glTexCoord2i(1, 0);
-                glVertex2i(x2, y1);
-                glTexCoord2i(0, 0);
-                glVertex2i(x1, y1);
-                glEnd();
+            glBindTexture(GL_TEXTURE_2D, tex[1]);
+            glColor3d(throb2, throb2, throb2);
 
-                glDisable(GL_BLEND);
-            }
+            glBegin(GL_QUADS);
+            glTexCoord2i(0, 1);
+            glVertex2i(x1, y2);
+            glTexCoord2i(1, 1);
+            glVertex2i(x2, y2);
+            glTexCoord2i(1, 0);
+            glVertex2i(x2, y1);
+            glTexCoord2i(0, 0);
+            glVertex2i(x1, y1);
+            glEnd();
+
             if (mouseover) {
-                double throb = sin(SDL_GetTicks() * 0.007) / 4.0 + 0.75;
                 int mx1 = x1  + mouseover->x;
                 int my1 = y1  + mouseover->y;
                 int mx2 = mx1 + mouseover->w;
@@ -128,11 +114,8 @@ int main(int argc, char **argv) {
                 double tx2 = (mouseover->x + mouseover->w) / 256.0;
                 double ty2 = (mouseover->y + mouseover->h) / 256.0;
 
-                glEnable(GL_BLEND);
-                glBlendFunc(GL_ONE, GL_ONE);
-
                 glBindTexture(GL_TEXTURE_2D, tex[1]);
-                glColor3d(1, throb, throb);
+                glColor3d(throb2, 0, 0);
 
                 glBegin(GL_QUADS);
                 glTexCoord2d(tx1, ty2);
@@ -145,8 +128,9 @@ int main(int argc, char **argv) {
                 glVertex2i  (mx1, my1);
                 glEnd();
 
-                glDisable(GL_BLEND);
             }
+
+            glDisable(GL_BLEND);
 
             glMatrixMode(GL_PROJECTION);
             glPopMatrix();
