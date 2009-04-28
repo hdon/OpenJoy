@@ -47,3 +47,12 @@ struct OJ_DiagramElement * OJ_DiagramFromFileName(const char *filename) {
     return d;
 }
 
+struct OJ_DiagramElement * OJ_DiagramCollidePoint(struct OJ_DiagramElement *d, int x, int y) {
+    while (d) {
+        if (x>=d->x && y>=d->y && x<(d->x+d->w) && y<(d->y+d->h))
+            return d;
+        d = d->next;
+    }
+    return NULL;
+}
+

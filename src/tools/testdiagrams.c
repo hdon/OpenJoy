@@ -6,10 +6,16 @@
 #include "glerror.c"
 
 int main(int argc, char **argv) {
-    struct OJ_DiagramElement *diag;
+    struct OJ_DiagramElement *diag, *mouseover = NULL;
     GLuint tex[2];
     int i;
     int back = 0, front = 0;
+
+    /* Diagram screen coords */
+    int x1 = (640 - 256) / 2;
+    int y1 = (480 - 256) / 2;
+    int x2 = x1 + 256;
+    int y2 = y1 + 256;
 
     if (argc >= 4) diag = OJ_DiagramFromFileName(argv[3]);
 
@@ -51,9 +57,13 @@ int main(int argc, char **argv) {
                         break;
                 }
                 break;
+            case SDL_MOUSEMOTION:
+                mouseover = OJ_DiagramCollidePoint(diag, event.motion.x-x1, event.motion.y-y1);
+                break;
         }
         do {
             static unsigned int err = 0;
+
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glDisable(GL_DEPTH_TEST);
             glMatrixMode(GL_PROJECTION);
@@ -70,13 +80,13 @@ int main(int argc, char **argv) {
 
                 glBegin(GL_QUADS);
                 glTexCoord2i(0, 1);
-                glVertex2i(160, 360);
+                glVertex2i(x1, y2);
                 glTexCoord2i(1, 1);
-                glVertex2i(480, 360);
+                glVertex2i(x2, y2);
                 glTexCoord2i(1, 0);
-                glVertex2i(480, 120);
+                glVertex2i(x2, y1);
                 glTexCoord2i(0, 0);
-                glVertex2i(160, 120);
+                glVertex2i(x1, y1);
                 glEnd();
             }
             if (front) {
@@ -89,13 +99,40 @@ int main(int argc, char **argv) {
 
                 glBegin(GL_QUADS);
                 glTexCoord2i(0, 1);
-                glVertex2i(160, 360);
+                glVertex2i(x1, y2);
                 glTexCoord2i(1, 1);
-                glVertex2i(480, 360);
+                glVertex2i(x2, y2);
                 glTexCoord2i(1, 0);
-                glVertex2i(480, 120);
+                glVertex2i(x2, y1);
                 glTexCoord2i(0, 0);
-                glVertex2i(160, 120);
+                glVertex2i(x1, y1);
+                glEnd();
+
+                glDisable(GL_BLEND);
+            }
+            if (mouseover) {
+                double throb = sin(SDL_GetTicks() * 0.007) / 4.0 + 0.75;
+                int mx1 = x1  + mouseover->x;
+                int my1 = y1  + mouseover->y;
+                int mx2 = mx1 + mouseover->w;
+                int my2 = my1 + mouseover->h;
+
+                glEnable(GL_BLEND);
+                glBlendFunc(GL_ONE, GL_ONE);
+
+                //glBindTexture(GL_TEXTURE_2D, tex[1]);
+                glDisable(GL_TEXTURE_2D);
+                glColor3d(1, throb, throb);
+
+                glBegin(GL_QUADS);
+                //glTexCoord2d(x1/, 1);
+                glVertex2i(mx1, my2);
+                //glTexCoord2d(1, 1);
+                glVertex2i(mx2, my2);
+                //glTexCoord2d(1, 0);
+                glVertex2i(mx2, my1);
+                //glTexCoord2d(0, 0);
+                glVertex2i(mx1, my1);
                 glEnd();
 
                 glDisable(GL_BLEND);

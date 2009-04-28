@@ -8,6 +8,7 @@ struct OJ_DiagramElement {
 };
 
 struct OJ_DiagramElement * OJ_DiagramFromFileName(const char *filename);
+struct OJ_DiagramElement * OJ_DiagramCollidePoint(struct OJ_DiagramElement *d, int x, int y);
 
 #endif/*OPENJOY_DIAGRAMS_HEADER_WJF823FH20G8H2G890H2GH89*/
 
