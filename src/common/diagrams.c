@@ -5,6 +5,7 @@
 #include <malloc.h>
 
 struct OJ_DiagramElement * OJ_DiagramFromFileName(const char *filename) {
+    char name[128];
     struct OJ_DiagramElement *d, *e;
     FILE * f;
     
@@ -16,15 +17,15 @@ struct OJ_DiagramElement * OJ_DiagramFromFileName(const char *filename) {
     d = NULL;
     while (feof(f) == 0) {
         int n, x, y, w, h;
-        n = fscanf(f, "%d %d %d %d\n", &x, &y, &w, &h);
-        printf("scanned %d %d %d %d\n", x, y, w, h);
+        n = fscanf(f, "%d %d %d %d %s\n", &x, &y, &w, &h, &name);
+        printf("scanned %d %d %d %d \"%s\"\n", x, y, w, h, name);
         
         if (n < 0) {
             fprintf(stderr, __FILE__"%d: fscanf() error %d: %s\n",
                 __LINE__, errno, strerror(errno));
             return NULL;
         }
-        if (n != 4) {
+        if (n != 5) {
             return d;
         }
 
@@ -42,6 +43,7 @@ struct OJ_DiagramElement * OJ_DiagramFromFileName(const char *filename) {
         d->y = y;
         d->w = w;
         d->h = h;
+        d->name = strdup(name);
     }
 
     return d;

@@ -58,7 +58,14 @@ int main(int argc, char **argv) {
                 }
                 break;
             case SDL_MOUSEMOTION:
-                mouseover = OJ_DiagramCollidePoint(diag, event.motion.x-x1, event.motion.y-y1);
+                if (1) {
+                    struct OJ_DiagramElement * d;
+                    d = OJ_DiagramCollidePoint(diag, event.motion.x-x1, event.motion.y-y1);
+                    if (d && d != mouseover) {
+                        printf("activated \"%s\"\n", d->name);
+                    }
+                    mouseover = d;
+                }
                 break;
         }
         do {
